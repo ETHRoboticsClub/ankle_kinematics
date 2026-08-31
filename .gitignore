@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+*.bak
+!geometry_OLD_2026-06-02.py.bak

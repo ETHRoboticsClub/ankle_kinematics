@@ -1,0 +1,59 @@
+<mujoco model="ankle_parallel_mechanism">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 0"/>
+
+  <visual>
+    <global offwidth="1920" offheight="1080"/>
+    <quality shadowsize="4096"/>
+    <headlight diffuse="0.55 0.55 0.55" ambient="0.30 0.30 0.30" specular="0.25 0.25 0.25"/>
+    <rgba haze="0.10 0.12 0.16 1"/>
+    <map znear="0.005" zfar="20"/>
+    <scale forcewidth="0.005" contactwidth="0.01" contactheight="0.01"
+           jointlength="0.04" jointwidth="0.002" framelength="0.05" framewidth="0.003"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.08 0.10 0.14" rgb2="0.02 0.02 0.04" width="512" height="512"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.20 0.20 0.23" rgb2="0.15 0.15 0.18" width="300" height="300" mark="edge" markrgb="0.28 0.28 0.32"/>
+    <material name="grid_mat"  texture="grid" texrepeat="6 6" texuniform="true" reflectance="0.05"/>
+    <material name="shin_mat"  rgba="0.62 0.65 0.72 1" specular="0.6" shininess="0.5"/>
+    <material name="cross_mat" rgba="0.85 0.85 0.88 1" specular="0.7" shininess="0.6"/>
+    <material name="foot_mat"  rgba="0.55 0.58 0.65 1" specular="0.5" shininess="0.4"/>
+  </asset>
+
+  <worldbody>
+    <light name="key"  pos="0.5 -0.4 0.9" dir="-0.5 0.4 -0.9" diffuse="0.7 0.7 0.7" specular="0.3 0.3 0.3"/>
+    <light name="fill" pos="-0.5 0.5 0.6" dir="0.5 -0.5 -0.6" diffuse="0.30 0.34 0.40"/>
+    <light name="rim"  pos="0 -0.8 0.5"   dir="0 0.8 -0.5"    diffuse="0.20 0.25 0.35"/>
+    <geom name="floor" type="plane" pos="0 0 -0.30" size="0 0 0.05" material="grid_mat"/>
+
+    <!-- SHIN: a tall capsule reaching down to the pivot. Fixed in world. -->
+    <body name="shin" pos="0 0 0">
+      <geom name="shin_visual" type="capsule" material="shin_mat"
+            fromto="0 0 0.025  0 0 0.22" size="0.022"/>
+
+      <!-- Universal joint: pitch (around y) parent of roll (around x) -->
+      <body name="cross" pos="0 0 0">
+        <joint name="pitch" type="hinge" axis="0 1 0" range="-0.45 0.45" damping="0.05"/>
+        <!-- Two short crossed capsules to represent the universal-joint cross -->
+        <geom name="cross_y" type="capsule" material="cross_mat"
+              fromto="0 -0.018 0  0 0.018 0" size="0.004"/>
+        <geom name="cross_x" type="capsule" material="cross_mat"
+              fromto="-0.018 0 0  0.018 0 0" size="0.004"/>
+
+        <body name="foot" pos="0 0 0">
+          <joint name="roll" type="hinge" axis="1 0 0" range="-0.45 0.45" damping="0.05"/>
+          <!-- Foot: thin elongated box sitting just below the pivot.
+               Forward (x+) is toes, backward (-x) is heel. -->
+          <geom name="foot_visual" type="box" material="foot_mat"
+                pos="0.025 0 -0.025" size="0.085 0.045 0.012"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="act_pitch" joint="pitch" kp="50" kv="2" ctrlrange="-0.45 0.45"/>
+    <position name="act_roll"  joint="roll"  kp="50" kv="2" ctrlrange="-0.45 0.45"/>
+  </actuator>
+</mujoco>
