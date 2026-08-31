@@ -19,9 +19,14 @@ import numpy as np
 import mujoco
 import mujoco.viewer
 
-from geometry import LEFT_LEG
-from kinematics import crank_tip_world, foot_anchor_world
-from mapping import joint_to_motor
+try:                       # imported as a package
+    from .geometry import LEFT_LEG
+    from .kinematics import crank_tip_world, foot_anchor_world
+    from .mapping import joint_to_motor
+except ImportError:        # run directly as a script
+    from geometry import LEFT_LEG
+    from kinematics import crank_tip_world, foot_anchor_world
+    from mapping import joint_to_motor
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))

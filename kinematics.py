@@ -17,7 +17,10 @@ Output is always a 3D point in the pivot frame (meters).
 """
 
 import numpy as np
-from geometry import AnkleGeometry, MotorGeometry, foot_rotation
+try:                       # imported as a package
+    from .geometry import AnkleGeometry, MotorGeometry, foot_rotation
+except ImportError:        # run directly as a script
+    from geometry import AnkleGeometry, MotorGeometry, foot_rotation
 
 
 def foot_anchor_world(geom: AnkleGeometry, motor: MotorGeometry,

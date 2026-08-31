@@ -13,8 +13,12 @@ import math
 import warnings
 
 import numpy as np
-from geometry import AnkleGeometry, MotorGeometry, rot_about_axis
-from kinematics import foot_anchor_world, crank_tip_world
+try:                       # imported as a package
+    from .geometry import AnkleGeometry, MotorGeometry, rot_about_axis
+    from .kinematics import foot_anchor_world, crank_tip_world
+except ImportError:        # run directly as a script
+    from geometry import AnkleGeometry, MotorGeometry, rot_about_axis
+    from kinematics import foot_anchor_world, crank_tip_world
 
 # Set False in vectorised RL envs, where an unreachable pose per step would
 # otherwise flood stderr. clamp_pose() makes it unnecessary anyway.

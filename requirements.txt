@@ -1,2 +1,5 @@
 numpy>=1.24
 matplotlib>=3.7
+
+# Optional -- only needed for viz_mujoco.py:
+# mujoco>=3.0

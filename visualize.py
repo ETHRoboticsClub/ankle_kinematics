@@ -25,9 +25,14 @@ from matplotlib.widgets import Slider, Button
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-from geometry import LEFT_LEG, RIGHT_LEG, foot_rotation
-from kinematics import foot_anchor_world, crank_tip_world
-from mapping import joint_to_motor, tilt_angle
+try:                       # imported as a package
+    from .geometry import LEFT_LEG, RIGHT_LEG, foot_rotation
+    from .kinematics import foot_anchor_world, crank_tip_world
+    from .mapping import joint_to_motor, tilt_angle
+except ImportError:        # run directly as a script
+    from geometry import LEFT_LEG, RIGHT_LEG, foot_rotation
+    from kinematics import foot_anchor_world, crank_tip_world
+    from mapping import joint_to_motor, tilt_angle
 
 
 # --- Visual style ---------------------------------------------------------

@@ -9,8 +9,8 @@ on the foot, with a universal joint at the ankle pivot.
 ## TL;DR for the controls team
 
 ```python
-from ankle_kinematics.geometry import LEFT_LEG, RIGHT_LEG
-from ankle_kinematics.mapping import joint_to_motor, motor_to_joint, clamp_pose
+from ankle_kinematics import (LEFT_LEG, RIGHT_LEG,
+                              joint_to_motor, motor_to_joint, clamp_pose)
 
 # Action pipeline (every control tick):
 #   ALWAYS clamp_pose first. The Kreuzgelenk only allows 30 deg of total tilt,
@@ -27,6 +27,31 @@ pitch_meas, roll_meas = motor_to_joint(LEFT_LEG, theta_A_encoder, theta_B_encode
 
 Pass `theta_prev` to keep the solver on a consistent branch across calls.
 A reasonable initial value is `(0.0, 0.0)` at startup.
+
+## Install
+
+No build step, no install — it is five files of numpy.
+
+```bash
+git clone https://github.com/eliacriscihuber/ankle_kinematics.git
+cd ankle_kinematics
+pip install -r requirements.txt        # numpy + matplotlib
+python3.11 check_geometry.py           # verify the geometry
+python3.11 visualize.py                # interactive 3D viewer
+```
+
+Works two ways, no configuration either way:
+
+```bash
+python3.11 mapping.py                  # run any module directly
+```
+```python
+from ankle_kinematics import clamp_pose, joint_to_motor   # or import the package
+```
+
+For the package form, put the *parent* of this directory on `sys.path`
+(or `pip install -e .` it into your own project). `viz_mujoco.py` additionally
+needs `mujoco`; nothing else does.
 
 ## Conventions (read this before plugging in)
 

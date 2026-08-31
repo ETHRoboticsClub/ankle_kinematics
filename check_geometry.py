@@ -14,9 +14,14 @@ Checks, in order:
 """
 
 import numpy as np
-from geometry import LEFT_LEG, RIGHT_LEG, AnkleGeometry, MotorGeometry
-from kinematics import foot_anchor_world, crank_tip_world
-from mapping import joint_to_motor, motor_to_joint, clamp_pose, tilt_angle
+try:                       # imported as a package
+    from .geometry import LEFT_LEG, RIGHT_LEG, AnkleGeometry, MotorGeometry
+    from .kinematics import foot_anchor_world, crank_tip_world
+    from .mapping import joint_to_motor, motor_to_joint, clamp_pose, tilt_angle
+except ImportError:        # run directly as a script
+    from geometry import LEFT_LEG, RIGHT_LEG, AnkleGeometry, MotorGeometry
+    from kinematics import foot_anchor_world, crank_tip_world
+    from mapping import joint_to_motor, motor_to_joint, clamp_pose, tilt_angle
 
 DEG = np.pi / 180.0
 

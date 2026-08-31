@@ -6,8 +6,12 @@ Run:
 """
 
 import numpy as np
-from geometry import LEFT_LEG
-from mapping import joint_to_motor, motor_to_joint
+try:                       # imported as a package
+    from .geometry import LEFT_LEG
+    from .mapping import joint_to_motor, motor_to_joint
+except ImportError:        # run directly as a script
+    from geometry import LEFT_LEG
+    from mapping import joint_to_motor, motor_to_joint
 
 
 def main():
