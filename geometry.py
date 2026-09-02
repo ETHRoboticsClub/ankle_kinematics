@@ -157,7 +157,7 @@ class AnkleGeometry:
 
 
 # ---------------------------------------------------------------------------
-# Concrete geometry: RIGHT leg, CAD measurements (2026-08-30)
+# Concrete geometry: RIGHT leg, CAD measurements (2026-09-02)
 # ---------------------------------------------------------------------------
 # NEW LEG DESIGN: both motor output shafts now point BACKWARD (-x) instead of
 # sideways (+/-y). Both motor axes lie on the shin centerline (y = 0) at
@@ -171,6 +171,13 @@ class AnkleGeometry:
 # intersection. Both pleuel lengths reproduce |P_crank_0 - P_anchor_0| to
 # 0.000 mm, so all points come from one consistent neutral pose.
 #
+# 2026-09-02 connector revision: the crank-side ball joints were extended
+# 7 mm in -x (x: -43.194 -> -50.194), and the rods shortened to suit
+# (269.244 -> 269.028, 194.354 -> 194.055). Note this does NOT change the
+# crank radius: the shaft axis runs along x, so the ball slid ALONG the
+# rotation axis rather than away from it. r is 56.8 mm before and after,
+# and the transmission ratio barely moves (dU/dp 0.957 -> 0.964).
+#
 # Previous design (shafts along +/-y, r ~ 22-24 mm) is kept in
 # geometry_OLD_2026-06-02.py.bak for reference.
 
@@ -178,16 +185,16 @@ RIGHT_LEG = AnkleGeometry(
     upper=MotorGeometry(
         P_shaft    = np.array([ -28.694,   0.000, 253.959]) * MM,
         n_shaft    = np.array([  -1.0,     0.0,     0.0]),
-        P_crank_0  = np.array([ -43.194, -56.800, 253.959]) * MM,
+        P_crank_0  = np.array([ -50.194, -56.800, 253.959]) * MM,
         P_anchor_0 = np.array([ -55.000, -60.550, -15.000]) * MM,
-        L          = 269.244 * MM,
+        L          = 269.028 * MM,
     ),
     lower=MotorGeometry(
         P_shaft    = np.array([ -28.694,   0.000, 178.959]) * MM,
         n_shaft    = np.array([  -1.0,     0.0,     0.0]),
-        P_crank_0  = np.array([ -43.194,  56.800, 178.959]) * MM,
+        P_crank_0  = np.array([ -50.194,  56.800, 178.959]) * MM,
         P_anchor_0 = np.array([ -55.000,  60.550, -15.000]) * MM,
-        L          = 194.354 * MM,
+        L          = 194.055 * MM,
     ),
     pitch_axis = np.array([0.0, 1.0, 0.0]),
     roll_axis  = np.array([1.0, 0.0, 0.0]),
