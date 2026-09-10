@@ -242,6 +242,28 @@ def _residuals_and_jacobian(geom: AnkleGeometry, theta_A: float, theta_B: float,
     return F, J
 
 
+def joint_to_motor_jacobian(geom: AnkleGeometry, theta_p: float, theta_r: float,
+                            theta_motor: tuple[float, float]) -> np.ndarray:
+    """Analytic d(motor angles)/d(pitch, roll) on the supplied IK branch.
+
+    Differentiate F(motor, joint)=0: dm/dq = -F_m^-1 F_q. Each rod
+    depends on only its own motor, so F_m is diagonal. This reuses the same
+    rod constraints as the forward solver, without four perturbed IK solves.
+    """
+    residual, joint_jac = _residuals_and_jacobian(geom, *theta_motor, theta_p, theta_r)
+    if not np.all(np.isfinite(residual)) or np.max(np.abs(residual)) > 1e-9:
+        raise ValueError('Ankle Jacobian requires a consistent motor/joint pose')
+    rotation = rot_about_axis(geom.pitch_axis, theta_p) @ rot_about_axis(geom.roll_axis, theta_r)
+    motor_derivative = np.empty(2)
+    for i, (motor, theta) in enumerate(zip((geom.upper, geom.lower), theta_motor)):
+        error = crank_tip_world(motor, theta) - rotation @ motor.P_anchor_0
+        tangent = motor.r * (-math.sin(theta) * motor.u_hat + math.cos(theta) * motor.v_hat)
+        motor_derivative[i] = 2.0 * (error @ tangent)
+    if not np.all(np.isfinite(motor_derivative)) or np.min(np.abs(motor_derivative)) < 1e-12:
+        raise ValueError('Singular ankle motor transmission')
+    return -joint_jac / motor_derivative[:, None]
+
+
 _SEED_CACHE: dict[int, np.ndarray] = {}
 
 
